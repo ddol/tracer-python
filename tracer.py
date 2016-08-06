@@ -28,13 +28,14 @@ def run(targets=[]):
     return None
 
 def find_gateway(host):
+    print 'Starting Traceroute...'
     gateway_lines = [l for l in sh.traceroute(host).split('\n')]
-    print gateway_lines.join(' -> ')
+    print ' -> '.join(gateway_lines)
     return gateway_lines[0].strip().split()[1]
 
 
 def ping_host(host_name):
-    delay = ping.do_one(host_name, 9)
+    delay = sh.ping(host_name, 9)
 
     if not delay:
         return None
@@ -43,6 +44,7 @@ def ping_host(host_name):
 
     
 def main():
+    print 'Entering main()'
     failures = 0
     gateway_host = find_gateway('www.skynet.ie')
     print 'Measuring ping latency to {}'.format(gateway_host)
