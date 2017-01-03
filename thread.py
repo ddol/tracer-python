@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# From Stack Exchange, user MRAB (2012/07/12)
+# http://codereview.stackexchange.com/a/13691
+
 import sys
 import os
 import platform
@@ -5,12 +9,13 @@ import subprocess
 import Queue
 import threading
 
-def worker_func(pingArgs, pending, done):
+def worker_func(ping_args, pending, done):
     try:
         while True:
             # Get the next address to ping.
             address = pending.get_nowait()
-
+            
+            print [ping_args]
             ping = subprocess.Popen(ping_args + [address],
                 stdout = subprocess.PIPE,
                 stderr = subprocess.PIPE
@@ -38,6 +43,8 @@ if plat == "Windows":
     pingArgs = ["ping", "-n", "1", "-l", "1", "-w", "100"]
 elif plat == "Linux":
     pingArgs = ["ping", "-c", "1", "-l", "1", "-s", "1", "-W", "1"]
+elif plat == "Darwin":
+    pingArgs = ["ping", "-c", "4", "-W", "1000"]
 else:
     raise ValueError("Unknown platform")
 
